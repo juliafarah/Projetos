@@ -136,7 +136,7 @@ category.to_sql('category', con=engine, index=False, if_exists='replace')
 
 #%%
 
-                             # ANALISE DE SERIES TEMPORAIS DOS DADOS (JA LIMPOS)
+                # ANALISE DE SERIES TEMPORAIS DOS DADOS (JA LIMPOS)
 
                             # VENDAS E QTD DE ORDERS MENSAL:
 
@@ -168,7 +168,7 @@ merge_order_orderitems = """
                             LIMIT 100;
                             
                             """
-                        # EXPLICAÇAO DO CODIGO DE SQL ACIMA :
+            # EXPLICAÇAO DO CODIGO DE SQL ACIMA :
 
                         # strftime('%Y', order_purchase_timestamp): Extrai o ano da coluna order_purchase_timestamp.
                         # strftime('%m', order_purchase_timestamp): Extrai o mês da coluna order_purchase_timestamp.
@@ -378,7 +378,7 @@ print(del_city_perf)
 #%%
 
                         # VISUALIZACAO GRAFICA DOS DADOS ACIMA:
-            #1: Formatando a area plotada = Duas figuras (com duas analises distintas) no centri e texto acima.
+            #1: Formatando a area plotada = Duas figuras (com duas analises distintas) no centro e texto acima.
             #2: Texto = 
                         # top 3 estados com a maior media de discrepancia de entrega. 
                         # top 3 cidades com a maior media de discrepancia da entrega.
@@ -503,7 +503,7 @@ early_late_del = """
                     order_id,
                     strftime('%d', order_delivered_customer_date) as delivered_date,
                     CASE 
-                        WHEN order_estimated_delivery_date < order_delivered_customer_date --  data estimada pela loja MENOR QUE data que chegou no destinatario
+                        WHEN order_estimated_delivery_date < order_delivered_customer_date  --data estimada pela loja MENOR QUE data que chegou no destinatario
                             THEN 'late_delivery' 
                         ELSE 'early_delivery' 
                     END AS delivery_status
@@ -528,11 +528,11 @@ early_late_del = """
                     (early + late) as all_delivery,
                     CASE 
                         WHEN (early + late) = 0 THEN 0
-                        ELSE (early  * 1.0 / (early + late) ) * 100  -- Multiplicado por 1.0 para garantir divisão decimal
+                        ELSE (early  * 1.0 / (early + late) ) * 100   --Multiplicado por 1.0 para garantir divisão decimal
                     END AS early_del_perc,
                     CASE
                         WHEN (early + late) = 0 THEN 0
-                        ELSE ( late * 1.0 / (early + late) ) * 100  -- Multiplicado por 1.0 para garantir divisão decimal
+                        ELSE ( late * 1.0 / (early + late) ) * 100  --Multiplicado por 1.0 para garantir divisão decimal
                     END AS late_del_perc
 
                 FROM delivery_summary;
