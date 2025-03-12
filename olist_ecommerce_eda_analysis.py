@@ -2,8 +2,6 @@
 # Repliquei um projeto do Kaggle no VS Code para praticar e consolidar minhas habilidades em análise e visualização de dados. 
 # Creditos: https://www.kaggle.com/code/phiphatjan/sql-and-python-in-depth-analysis#4.-Create-SQLite-Engine-&-Populate-Tables
 
-# Codigo em andamento !
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -679,3 +677,105 @@ for bar, percent in zip(ax9.patches[len(early_late_del):], # [len(early_late_del
 
 plt.tight_layout()
 plt.show()
+
+#%%
+
+                                    # VISUALIZAÇÃO DAS TABELAS ACIMA:
+           
+            #0 Montar o tamanho da figura com 3 graficos
+                
+                #1 A parte de texto : 
+                    # 1A : TOP 3 categorias de produtos com maior media de avaliacao 
+                    # 1B : TOP 3 cidades com a maior quantidade de avaliacoes postadas.
+                
+                #2 1o Grafico : Distribuição das Pontuações das Avaliações: 
+                    # gráfico de barras mostrando a distribuição das pontuações das avaliações.
+                
+                #3 Média das Pontuações das Avaliações por Categoria de Produto (Segundo Painel):
+                    # gráfico de barras mostrando a média das pontuações das avaliações para cada categoria de produto,
+                    # utilizando uma paleta de cores em tons de amarelo, verde e azul.
+                
+                #4 Quantidade de Avaliações por Cidade (Terceiro Painel):
+                    # gráfico de barras mostrando o número de avaliações para cada cidade, 
+                    # com o eixo x invertido para melhor legibilidade e os rótulos do eixo y à direita.
+                
+                #5 Personalizações do Gráfico de Barras:
+                    # Remover as bordas superior e direita para um visual mais limpo.
+                    # Ajustar as posições dos rótulos do eixo y no gráfico das cidades para melhorar a legibilidade.
+#%%
+
+#0 CRIANDO O TAMANHO DA FIGURA COM OS 3 GRAFICOS: 
+plt.figure(figsize=(15,25))
+gs = gridspec.GridSpec(2, 2, width_ratios=[1, 1], height_ratios=[0.2, 1])
+
+
+#1 O TEXTO: 
+ax10 = plt.subplot(gs[0,0]) # 1 linha da 1 coluna
+ax10.axis('off') # sem linhas de grafico
+
+        # TOP 3 categorias de produtos com maior media de avaliacao:
+top3_prod_rev = (avg_score_rev.
+                 nlargest(3,'avg_review_score')
+                 ['product_category_name_english']
+                 .tolist()
+                 )
+
+        # TOP 3 cidades com a maior quantidade de avaliacoes postadas:
+top3_cities_rev = (count_rev_city
+                   .nlargest(3, 'review_count')
+                   ['customer_city']
+                   .tolist()
+                    )
+
+        # Escrevendo e formatando o texto:
+bold_font = {'weight': 'bold', 'size': 'large'}
+
+text10 = (f"As categorias com as 3 maiores pontuações das avaliações são:\n"
+          f"{', '.join(top3_prod_rev)}.\n"
+          "\n"
+          f"As cidades com as maiores quantidades de avaliações são:\n"
+          f"{', '.join(top3_cities_rev)}.\n")
+
+ax10.text(0.15, 0.5, text10, ha='center', va='center', fontdict=bold_font)
+
+
+#2 1o Grafico : Distribuição das Pontuações das Avaliações:
+ax11 = plt.subplot(gs[0,1]) # 1 linha da 2a coluna
+sns.barplot(x='review_score', y='review_count', hue='review_count', data=rev_score_dist, palette='dark:#513b56', ax=ax11, legend=False)
+ax11.set_title("Distribuição das Pontuações das Avaliações")
+ax11.set_xlabel("Pontuação")
+ax11.set_ylabel("Qtd Avaliações")
+
+#3 **2o grafico** Média das Pontuações das Avaliações por Categoria de Produto:
+ax12= plt.subplot(gs[1,0]) # 2a linha da 1a coluna
+sns.barplot(
+    x='avg_review_score', 
+    y='product_category_name_english', 
+    hue='product_category_name_english',  # Corrige o aviso
+    data=avg_score_rev, 
+    palette='YlGnBu', 
+    ax=ax12, 
+    legend=False  # Remove a legenda
+)
+ax12.set_title("Média das Pontuações das Avaliações por Categoria de Produto")
+ax12.set_xlabel("Media das Pontuações")
+ax12.set_ylabel("Categorias")
+ax12.spines['top'].set_visible(False) # Remove a borda superior do gráfico
+ax12.spines['right'].set_visible(False) # Remove a borda esquerda do gráfico
+
+#4 **3o grafico** Quantidade de Avaliações por Cidade:
+ax13 = plt.subplot(gs[1,1]) # 2a linha da 2a coluna
+sns.barplot(x='review_count', y='customer_city', hue='customer_city', data=count_rev_city, palette='YlGnBu', ax=ax13, legend=False)
+ax13.set_title("Quantidade de Avaliações por Cidade")
+ax13.set_xlabel("Qtd de avaliações")
+ax13.set_ylabel("Cidades")
+ax13.yaxis.set_label_position('right') # Move o rótulo do eixo Y para a direita
+ax13.yaxis.tick_right() # # Move os ticks (tracinhos) do eixo Y para a direita
+ax13.invert_xaxis() # Inverte o eixo X
+ax13.spines['top'].set_visible(False) # Remove a borda superior do gráfico
+ax13.spines['left'].set_visible(False) # Remove a borda esquerda do gráfico
+
+plt.tight_layout()
+plt.show()
+
+# Fim do codigo!
